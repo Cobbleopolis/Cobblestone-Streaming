@@ -1,8 +1,10 @@
 doctype html
+head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='http://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css')
+    block head
 html
-    head
-        title= title
-        link(rel='stylesheet', href='/stylesheets/style.css')
-        block head
     body
         block content
