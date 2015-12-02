@@ -4,7 +4,17 @@ head
     link(rel='stylesheet', href='/stylesheets/font-awesome.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(href='http://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css')
+    script(src='javascripts/jquery-1.11.3.min.js')
+    script(src='javascripts/global.js')
     block head
 html
     body
-        block content
+        div#nav
+            ul
+                li HelloThere
+                li HelloThere2
+                li HelloThere3
+        div#content
+            div#navButton
+                i.fa.fa-bars
+            block content
