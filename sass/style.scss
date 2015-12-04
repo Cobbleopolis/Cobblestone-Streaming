@@ -1,5 +1,5 @@
 //colors
-$linkColor: #00b7ff;
+$linkColor: #00B7FF;
 $backgroundColor: #A0A0A0;
 
 //fonts
@@ -42,4 +42,23 @@ a {
 	top: 2em;
 	position: fixed;
 	z-index: 1;
+	color: #FFFFFF;
+	background: #090909;
+	font-size: 20px;
+	padding: 1em;
+	border-top-right-radius: .25em;
+	border-bottom-right-radius: .25em;
+	//display: inline !important;
+
+	i {
+		position: relative;
+		vertical-align: middle;
+	}
+
+	#navLabel {
+		display: none;
+		//margin-left: 1em;
+		padding: 0;
+		vertical-align: middle;
+	}
 }

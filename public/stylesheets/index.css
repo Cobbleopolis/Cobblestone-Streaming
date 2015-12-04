@@ -12,7 +12,7 @@ body {
   padding-left: 2em; }
 
 a {
-  color: #00b7ff; }
+  color: #00B7FF; }
 
 #nav {
   z-index: -1;
@@ -30,7 +30,20 @@ a {
   left: 0;
   top: 2em;
   position: fixed;
-  z-index: 1; }
+  z-index: 1;
+  color: #FFFFFF;
+  background: #090909;
+  font-size: 20px;
+  padding: 1em;
+  border-top-right-radius: .25em;
+  border-bottom-right-radius: .25em; }
+  #navButton i {
+    position: relative;
+    vertical-align: middle; }
+  #navButton #navLabel {
+    display: none;
+    padding: 0;
+    vertical-align: middle; }
 
 body {
   background-color: #A0A0A0; }
