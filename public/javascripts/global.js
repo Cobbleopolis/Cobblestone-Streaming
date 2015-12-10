@@ -56,18 +56,6 @@ $(document).ready( function() {
                 }
             );
 
-            //child.stop().animate({height: "toggle"},
-            //    {
-            //        duration: 400,
-            //        progress: function(animation, progress, remainingMs) {
-            //            var left = (progress / 400) * nav.outerWidth();
-            //
-            //            content.animate({"left": "+=" + left}, 1);
-            //            navButton.animate({"left": "+=" + left}, 1);
-            //        }
-            //    }
-            //);
-
         }
     });
 
