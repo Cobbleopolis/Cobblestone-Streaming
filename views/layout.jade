@@ -1,3 +1,17 @@
+mixin navBlock(dir)
+    ul
+        for item in dir
+            li
+                div(class= item.type)
+                    if item.type == "folder"
+                        i.fa.fa-folder
+                    else if item.type == "file"
+                        i.fa.fa-file
+                    = " " + item.name
+                if item.type == "folder"
+                    +navBlock(item.children)
+
+
 doctype html
 head
     title= title
@@ -10,11 +24,14 @@ head
 html
     body
         div#nav
-            ul
-                li HelloThere
-                li HelloThere2
-                li HelloThere3
+            h1 Navigation
+            //p= JSON.stringify(mediaFiles)
+            +navBlock(mediaFiles.children)
+
         div#navButton
             i.fa.fa-bars
+
         div#content
-            block content
+            div#banner= bannerText
+            div#pageContent
+                block content

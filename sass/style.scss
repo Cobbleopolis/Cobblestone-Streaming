@@ -1,6 +1,8 @@
 //colors
 $linkColor: #00B7FF;
-$backgroundColor: #A0A0A0;
+$backgroundColor: #E0E0E0;
+
+$navColor: darken($backgroundColor, 30);
 
 //fonts
 $font: Ubuntu;
@@ -8,6 +10,7 @@ $font: Ubuntu;
 body {
 	font-family: $font;
 	padding: 50px;
+	background: $navColor;
 }
 
 #content {
@@ -17,7 +20,11 @@ body {
 	position: absolute;
 	left: 0;
 	top: 0;
-	padding-left: 2em;
+//	padding-left: 2em;
+}
+
+#pageContent {
+	padding-left: 5em;
 }
 
 a {
@@ -25,15 +32,24 @@ a {
 }
 
 #nav {
-	z-index: -1;
+	z-index: 0;
 	position: fixed;
 	float: left;
 	left: 0;
 	top: 0;
 	height: 100%;
 	overflow: auto;
-	padding: 2em;
-	background: darken($backgroundColor, 10);
+	background: $navColor;
+	h1 {
+		padding: 0.5em;
+		margin: 0;
+		border-bottom: solid 1px darken($backgroundColor, 40);
+	}
+	li {
+		ul {
+			display: none;
+		}
+	}
 }
 
 #navButton {
@@ -61,4 +77,15 @@ a {
 		padding: 0;
 		vertical-align: middle;
 	}
+
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+#banner {
+	width: 100%;
+	height: 2em;
+	text-align: center;
+	//vertical-text-align: middle;
 }
