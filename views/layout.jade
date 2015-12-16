@@ -1,15 +1,16 @@
-mixin navBlock(dir)
-    ul
-        for item in dir
-            li
-                div(class= item.type)
-                    if item.type == "folder"
-                        i.fa.fa-folder
-                    else if item.type == "file"
-                        i.fa.fa-file
-                    = " " + item.name
-                if item.type == "folder"
-                    +navBlock(item.children)
+mixin navBlock(dir, listID)
+    if dir
+        ul(id= listID)
+            for item in dir
+                li
+                    div(class= item.type)
+                        if item.type == "folder"
+                            i.fa.fa-folder
+                        else if item.type == "file"
+                            i.fa.fa-file
+                        = " " + item.name
+                    if item.type == "folder" && item.children
+                        +navBlock(item.children, "")
 
 
 doctype html
@@ -25,8 +26,7 @@ html
     body
         div#nav
             h1 Navigation
-            //p= JSON.stringify(mediaFiles)
-            +navBlock(mediaFiles.children)
+            +navBlock(mediaFiles, "baseList")
 
         div#navButton
             i.fa.fa-bars
@@ -34,4 +34,5 @@ html
         div#content
             div#banner= bannerText
             div#pageContent
+                //p= JSON.stringify(mediaFiles)
                 block content

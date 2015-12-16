@@ -20,7 +20,6 @@ body {
 	position: absolute;
 	left: 0;
 	top: 0;
-//	padding-left: 2em;
 }
 
 #pageContent {
@@ -45,7 +44,19 @@ a {
 		margin: 0;
 		border-bottom: solid 1px darken($backgroundColor, 40);
 	}
+	#baseList {
+		padding-left: 0;
+	}
 	li {
+		cursor: pointer;
+		list-style-type: none;
+		div {
+			padding: 4px 0;
+			background: $navColor;
+			&:hover {
+				background: darken($backgroundColor, 40);
+			}
+		}
 		ul {
 			display: none;
 		}
@@ -64,7 +75,7 @@ a {
 	padding: 1em;
 	border-top-right-radius: .25em;
 	border-bottom-right-radius: .25em;
-	//display: inline !important;
+	display: inline !important;
 
 	i {
 		position: relative;

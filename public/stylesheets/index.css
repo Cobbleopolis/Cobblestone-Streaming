@@ -30,8 +30,18 @@ a {
     padding: 0.5em;
     margin: 0;
     border-bottom: solid 1px #7a7a7a; }
-  #nav li ul {
-    display: none; }
+  #nav #baseList {
+    padding-left: 0; }
+  #nav li {
+    cursor: pointer;
+    list-style-type: none; }
+    #nav li div {
+      padding: 4px 0;
+      background: #949494; }
+      #nav li div:hover {
+        background: #7a7a7a; }
+    #nav li ul {
+      display: none; }
 
 #navButton {
   float: left;
@@ -44,7 +54,8 @@ a {
   font-size: 20px;
   padding: 1em;
   border-top-right-radius: .25em;
-  border-bottom-right-radius: .25em; }
+  border-bottom-right-radius: .25em;
+  display: inline !important; }
   #navButton i {
     position: relative;
     vertical-align: middle; }

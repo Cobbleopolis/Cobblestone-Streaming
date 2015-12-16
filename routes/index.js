@@ -37,7 +37,7 @@ router.get('/', function (req, res, next) {
         {
             title: 'Express',
             bannerText: "Welcome to Cobblestone Streaming",
-            mediaFiles: dirTree("public/media")
+            mediaFiles: dirTree("public/media").children
         });
 });
 

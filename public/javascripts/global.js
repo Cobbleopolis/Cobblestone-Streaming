@@ -59,6 +59,13 @@ $(document).ready( function() {
         }
     });
 
+    $(".file").click(function() {
+        if (this == event.target) {
+            var jThis = $(this);
+            console.log(jThis.html());
+        }
+    });
+
 });
 
 function openNav() {
