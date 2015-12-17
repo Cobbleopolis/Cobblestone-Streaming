@@ -1,7 +1,7 @@
 body {
   font-family: Ubuntu;
   padding: 50px;
-  background: #949494; }
+  background: #2e2e2e; }
 
 #content {
   width: 100%;
@@ -10,9 +10,27 @@ body {
   position: absolute;
   left: 0;
   top: 0; }
+  #content:after {
+    content: '\A';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    -webkit-transition: opacity 0.4s linear;
+    -moz-transition: opacity 0.4s linear;
+    -ms-transition: opacity 0.4s linear;
+    -o-transition: opacity 0.4s linear;
+    transition: opacity 0.4s linear; }
+
+#content.darken:after {
+  opacity: .4 !important; }
 
 #pageContent {
-  padding-left: 5em; }
+  padding-left: 5em;
+  height: calc(100% - 4em); }
 
 a {
   color: #00B7FF; }
@@ -25,7 +43,8 @@ a {
   top: 0;
   height: 100%;
   overflow: auto;
-  background: #949494; }
+  background: #2e2e2e;
+  color: #E0E0E0; }
   #nav h1 {
     padding: 0.5em;
     margin: 0;
@@ -37,9 +56,14 @@ a {
     list-style-type: none; }
     #nav li div {
       padding: 4px 0;
-      background: #949494; }
+      background: #2e2e2e;
+      -webkit-transition: background 0.1s linear;
+      -moz-transition: background 0.1s linear;
+      -ms-transition: background 0.1s linear;
+      -o-transition: background 0.1s linear;
+      transition: background 0.1s linear; }
       #nav li div:hover {
-        background: #7a7a7a; }
+        background: #616161 !important; }
     #nav li ul {
       display: none; }
 
@@ -49,8 +73,8 @@ a {
   top: 2em;
   position: fixed;
   z-index: 1;
-  color: #FFFFFF;
-  background: #090909;
+  color: #E0E0E0;
+  background: #2e2e2e;
   font-size: 20px;
   padding: 1em;
   border-top-right-radius: .25em;
@@ -69,4 +93,27 @@ a {
 #banner {
   width: 100%;
   height: 2em;
-  text-align: center; }
+  text-align: center;
+  background: #ededed;
+  border-bottom: solid 1px #616161;
+  display: inline-block; }
+  #banner span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: auto;
+    margin-bottom: auto; }
+
+#mediaMount {
+  width: 90%;
+  height: calc(100% - 2em - 1px);
+  margin: auto;
+  padding: 2em; }
+  #mediaMount img {
+    height: auto;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin: 0 auto;
+    background-image: url("../images/loading.gif");
+    background-position: center; }

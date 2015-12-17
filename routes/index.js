@@ -13,6 +13,7 @@ function dirTree(filename) {
 
     if (stats.isDirectory()) {
         info.type = "folder";
+        info.extention = '';
         info.children = fs.readdirSync(filename).map(function (child) {
             return dirTree(filename + '/' + child);
         });
@@ -20,6 +21,7 @@ function dirTree(filename) {
         // Assuming it's a file. In real life it could be a symlink or
         // something else!
         info.type = "file";
+        info.extention = filename.split('.').pop().toLowerCase();
     }
 
     return info;

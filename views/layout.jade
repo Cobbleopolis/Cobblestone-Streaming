@@ -3,12 +3,15 @@ mixin navBlock(dir, listID)
         ul(id= listID)
             for item in dir
                 li
-                    div(class= item.type)
+                    div(class= item.type path=item.path)
                         if item.type == "folder"
                             i.fa.fa-folder
                         else if item.type == "file"
-                            i.fa.fa-file
-                        = " " + item.name
+                            if item.extention == 'jpg' || item.extention == 'jpeg' || item.extention == 'png'
+                                i.fa.fa-file-image-o.image
+                            else
+                                i.fa.fa-file
+                        span= " " + item.name
                     if item.type == "folder" && item.children
                         +navBlock(item.children, "")
 
@@ -32,7 +35,8 @@ html
             i.fa.fa-bars
 
         div#content
-            div#banner= bannerText
+            div#banner
+                span #{bannerText}
             div#pageContent
                 //p= JSON.stringify(mediaFiles)
                 block content
