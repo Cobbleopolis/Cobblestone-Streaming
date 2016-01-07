@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "preserveConstEnums": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "sourceMap": true,
+    "outDir": "../public/javascripts/"
+  },
+  "filesGlob": [
+    "**/*.ts",
+    "**/*.tsx",
+    "!../node_modules/**"
+  ]
+}

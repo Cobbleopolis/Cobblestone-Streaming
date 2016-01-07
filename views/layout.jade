@@ -25,18 +25,18 @@ head
     script(src='javascripts/jquery-1.11.3.min.js')
     script(src='javascripts/global.js')
     block head
-html
-    body
-        div#nav
-            h1 Navigation
-            +navBlock(mediaFiles, "baseList")
+body
+    div#nav
+        h1 Navigation
+        +navBlock(mediaFiles, "baseList")
 
-        div#navButton
-            i.fa.fa-bars
+    div#navButton
+        i.fa.fa-bars
 
-        div#content
-            div#banner
-                span #{bannerText}
-            div#pageContent
-                //p= JSON.stringify(mediaFiles)
-                block content
+    div#content
+        div#banner
+            span #{bannerText}
+        div#pageContent
+            //p= JSON.stringify(mediaFiles)
+            block content
+    div#overlay
