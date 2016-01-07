@@ -96,7 +96,7 @@ function mountFileContent(jObject) {
     var extension = getFileExtention(fileName);
     var appendingObject = null;
     if (extension == "jpg" || extension == "jpeg" || extension == "png")
-        appendingObject = $("<img>").attr('src', jObject.attr('path').split("/").slice(1).join("/"));
+        appendingObject = $("<img>").attr('src', "/public/" + jObject.attr('path').split("/").slice(1).join("/"));
     if (appendingObject) {
         mediaMount.children().remove();
         if (autoClose)
