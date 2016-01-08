@@ -18,7 +18,7 @@ $(document).ready( function() {
     mediaMount = $('#mediaMount');
 
     navButton.append(navLabel);
-    navButton.css("height", navButton.height());
+    navButton.css('height', navButton.height());
 
     var overlayHeight = window.getComputedStyle(document.getElementById('content'), null).getPropertyValue('height');
     overlay.css('height', overlayHeight === 'auto' ? '100%' : overlayHeight);
@@ -40,36 +40,41 @@ $(document).ready( function() {
             toggleNav();
     });
 
-    $(".folder").click(function () {
+    $('.folder').click(function () {
         var jThis = $(this);
-        var i = jThis.find($("i"));
+        var i = jThis.find($('i'));
+        var isClosing: boolean;
+        var moveWidth: number = nav.outerWidth(true);
 
-        if (i.hasClass("fa-folder")) {
-            i.removeClass("fa-folder");
-            i.addClass("fa-folder-open");
-        } else if (i.hasClass("fa-folder-open")) {
-            i.removeClass("fa-folder-open");
-            i.addClass("fa-folder");
+        if (i.hasClass('fa-folder')) {
+            i.removeClass('fa-folder');
+            i.addClass('fa-folder-open');
+
+            isClosing = false;
+        } else if (i.hasClass('fa-folder-open')) {
+            i.removeClass('fa-folder-open');
+            i.addClass('fa-folder');
+
+            isClosing = true;
         }
 
         var child = $(jThis.siblings()[0]);
-        child.stop().animate({height: "toggle"},
+        child.stop().animate({height: 'toggle'},
             {
                 start: function() {
-                    content.animate({"left": nav.outerWidth()}, 350);
-                    navButton.animate({"left": nav.outerWidth()}, 350);
-                    overlay.animate({"left": nav.outerWidth()}, 350);
-                },
-                complete: function() {
-                    content.animate({"left": nav.outerWidth()}, 350);
-                    navButton.animate({"left": nav.outerWidth()}, 350);
-                    overlay.animate({"left": nav.outerWidth()}, 350);
+                    if (isClosing)
+                        child.css('position', 'absolute');
+                    content.animate({'left': nav.outerWidth(true)}, 350);
+                    navButton.animate({'left': nav.outerWidth(true)}, 350);
+                    overlay.animate({'left': nav.outerWidth(true)}, 350);
+                    if (isClosing)
+                        child.css('position', 'static');
                 }
             }
         );
     });
 
-    $(".file").click(function() {
+    $('.file').click(function() {
         var jThis = $(this);
         console.log(jThis.html());
         mountFileContent(jThis);
@@ -110,11 +115,11 @@ function toggleNav() {
 }
 
 function mountFileContent(jObject: JQuery) {
-    var fileName = jObject.find($("span")).text();
+    var fileName = jObject.find($('span')).text();
     var extension = getFileExtention(fileName);
     var appendingObject = null;
-    if (extension == "jpg" || extension == "jpeg" || extension == "png")
-        appendingObject = $("<img>").attr('src', "/public/" + jObject.attr('path').split("/").slice(1).join("/"));
+    if (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
+        appendingObject = $('<img>').attr('src', '/public/' + jObject.attr('path').split('/').slice(1).join('/'));
 
     if (appendingObject) {
         mediaMount.children().remove();
