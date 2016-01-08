@@ -17,26 +17,27 @@ mixin navBlock(dir, listID)
 
 
 doctype html
-head
-    title= title
-    link(rel='stylesheet', href='public/stylesheets/font-awesome.min.css')
-    link(rel='stylesheet', href='public/stylesheets/style.css')
-    link(href='http://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css')
-    script(src='public/javascripts/jquery-1.11.3.min.js')
-    script(src='public/javascripts/global.js')
-    block head
-body
-    div#nav
-        h1 Navigation
-        +navBlock(mediaFiles, "baseList")
+html
+    head
+        title= title
+        link(rel='stylesheet', href='public/stylesheets/font-awesome.min.css')
+        link(rel='stylesheet', href='public/stylesheets/style.css')
+        link(href='http://fonts.googleapis.com/css?family=Ubuntu&subset=cyrillic,latin' rel='stylesheet' type='text/css')
+        script(src='public/javascripts/jquery-1.11.3.min.js')
+        script(src='public/javascripts/global.js')
+        block head
+    body
+        div#nav
+            h1 Navigation
+            +navBlock(mediaFiles, "baseList")
 
-    div#navButton
-        i.fa.fa-bars
+        div#navButton
+            i.fa.fa-bars
 
-    div#content
-        div#banner
-            span #{bannerText}
-        div#pageContent
-            //p= JSON.stringify(mediaFiles)
-            block content
-    div#overlay
+        div#content
+            div#banner
+                span #{bannerText}
+            div#pageContent
+                //p= JSON.stringify(mediaFiles)
+                block content
+        div#overlay
