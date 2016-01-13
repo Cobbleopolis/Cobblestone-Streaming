@@ -1,0 +1,6 @@
+div.musicPlayer
+    img(src= dir + '/cover.jpg' onload= 'this.style.opacity = "1"')
+    div.controls
+        div.play(onclick='AudioPlayer.togglePlaying()')
+    audio(controls = 'controls')
+        source(src= file.path type= file.type)

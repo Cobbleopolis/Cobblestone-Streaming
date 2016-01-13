@@ -115,22 +115,40 @@ function toggleNav() {
 }
 
 function mountFileContent(jObject: JQuery) {
-    var fileName = jObject.find($('span')).text();
-    var extension = getFileExtention(fileName);
-    var appendingObject = null;
-    if (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
-        appendingObject = $('<img>').attr('src', '/public/' + jObject.attr('path').split('/').slice(1).join('/'));
-
-    if (appendingObject) {
+    var fileName:string = jObject.find($('span')).text();
+    var path:string = jObject.attr('path');
+    var dir:string = path.substring(0, path.lastIndexOf("/"));
+    var extension:string = FileExtention.getFileExtention(fileName);
+    var appendingObject:JQuery = null;
+    if (FileExtention.isImageExtension(extension)) {
         mediaMount.children().remove();
-        if (autoClose)
-            toggleNav();
-        mediaMount.append(appendingObject);
+        mediaMount.append($(document.createElement('img')).attr('src', path));
+    } else if (FileExtention.isAudioExtension(extension)) {
+            $.ajax({
+                    url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir,
+                    type: 'get',
+                    success: function(res) {
+                        mediaMount.children().remove();
+                        mediaMount.append(res);
+                        AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
+                    }
+                }
+            );
+            //$.ajax(
+            //    {
+            //        url: '/rest/getAlbumImage?dir=' + dir,
+            //        type: 'get',
+            //        success: function(res) {
+            //            $('div.musicPlayer img').fadeOut('fast', function() {
+            //
+            //            });
+            //            console.log(res);
+            //        }
+            //    }
+            //)
     }
-}
-
-function getFileExtention(filename: string) {
-    return filename.split('.').pop().toLowerCase();
+    if (autoClose)
+        toggleNav();
 }
 
 module MessageHandle {
@@ -183,6 +201,43 @@ module MessageHandle {
     }
 }
 
+module FileExtention {
+    let fileTypes: any = {
+        imageTypes: {
+            'jpg': '',
+            'jpeg': '',
+            'png': ''
+        },
+        audioTypes: {
+            'mp3': 'audio/mpeg',
+            'flac': 'audio/mpeg', //TODO check for correct type
+            'oog': 'audio/oog'
+        }
+    };
+
+    export function getFileExtention(filename: string): string {
+        return filename.split('.').pop().toLowerCase();
+    }
+
+    export function isImageExtension(fileExtension: string): boolean {
+        return fileExtension in fileTypes.imageTypes;
+    }
+
+    export function isAudioExtension(fileExtension: string): boolean {
+        return fileExtension in fileTypes.audioTypes;
+    }
+
+    export function getFileMediaType(fileExtension: string): string {
+        if (isImageExtension(fileExtension))
+            return fileTypes.imageTypes[fileExtension];
+        else if (isAudioExtension(fileExtension))
+            return fileTypes.audioTypes[fileExtension];
+        else
+            return null;
+    }
+
+}
+
 class Color {
 
     color: string;
@@ -223,4 +278,32 @@ class Color {
         Color.black
     ];
 
+}
+
+module AudioPlayer {
+
+    let audioElem: HTMLAudioElement;
+
+    export function setAudioElem(newElem: HTMLAudioElement) {
+        audioElem = newElem;
+    }
+
+    export function getAudioElem(): HTMLAudioElement {
+        return audioElem;
+    }
+
+    export function play() {
+        audioElem.play();
+    }
+
+    export function pause() {
+        audioElem.pause();
+    }
+
+    export function togglePlaying() {
+        if(audioElem.paused)
+            play();
+        else
+            pause();
+    }
 }

@@ -9,6 +9,8 @@ mixin navBlock(dir, listID)
                         else if item.type == "file"
                             if item.extention == 'jpg' || item.extention == 'jpeg' || item.extention == 'png'
                                 i.fa.fa-file-image-o.image
+                            else if item.extention == 'mp3' || item.extention == 'flac' || item.extention == 'oog'
+                                i.fa.fa-file-audio-o
                             else
                                 i.fa.fa-file
                         span= " " + item.name

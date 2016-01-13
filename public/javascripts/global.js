@@ -96,19 +96,27 @@ function toggleNav() {
 }
 function mountFileContent(jObject) {
     var fileName = jObject.find($('span')).text();
-    var extension = getFileExtention(fileName);
+    var path = jObject.attr('path');
+    var dir = path.substring(0, path.lastIndexOf("/"));
+    var extension = FileExtention.getFileExtention(fileName);
     var appendingObject = null;
-    if (extension == 'jpg' || extension == 'jpeg' || extension == 'png')
-        appendingObject = $('<img>').attr('src', '/public/' + jObject.attr('path').split('/').slice(1).join('/'));
-    if (appendingObject) {
+    if (FileExtention.isImageExtension(extension)) {
         mediaMount.children().remove();
-        if (autoClose)
-            toggleNav();
-        mediaMount.append(appendingObject);
+        mediaMount.append($(document.createElement('img')).attr('src', path));
     }
-}
-function getFileExtention(filename) {
-    return filename.split('.').pop().toLowerCase();
+    else if (FileExtention.isAudioExtension(extension)) {
+        $.ajax({
+            url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir,
+            type: 'get',
+            success: function (res) {
+                mediaMount.children().remove();
+                mediaMount.append(res);
+                AudioPlayer.setAudioElem($('audio')[0]);
+            }
+        });
+    }
+    if (autoClose)
+        toggleNav();
 }
 var MessageHandle;
 (function (MessageHandle) {
@@ -164,6 +172,42 @@ var MessageHandle;
     }
     MessageHandle.removeAllMessages = removeAllMessages;
 })(MessageHandle || (MessageHandle = {}));
+var FileExtention;
+(function (FileExtention) {
+    var fileTypes = {
+        imageTypes: {
+            'jpg': '',
+            'jpeg': '',
+            'png': ''
+        },
+        audioTypes: {
+            'mp3': 'audio/mpeg',
+            'flac': 'audio/mpeg',
+            'oog': 'audio/oog'
+        }
+    };
+    function getFileExtention(filename) {
+        return filename.split('.').pop().toLowerCase();
+    }
+    FileExtention.getFileExtention = getFileExtention;
+    function isImageExtension(fileExtension) {
+        return fileExtension in fileTypes.imageTypes;
+    }
+    FileExtention.isImageExtension = isImageExtension;
+    function isAudioExtension(fileExtension) {
+        return fileExtension in fileTypes.audioTypes;
+    }
+    FileExtention.isAudioExtension = isAudioExtension;
+    function getFileMediaType(fileExtension) {
+        if (isImageExtension(fileExtension))
+            return fileTypes.imageTypes[fileExtension];
+        else if (isAudioExtension(fileExtension))
+            return fileTypes.audioTypes[fileExtension];
+        else
+            return null;
+    }
+    FileExtention.getFileMediaType = getFileMediaType;
+})(FileExtention || (FileExtention = {}));
 var Color = (function () {
     function Color(value) {
         this.color = value;
@@ -200,4 +244,31 @@ var Color = (function () {
     ];
     return Color;
 })();
+var AudioPlayer;
+(function (AudioPlayer) {
+    var audioElem;
+    function setAudioElem(newElem) {
+        audioElem = newElem;
+    }
+    AudioPlayer.setAudioElem = setAudioElem;
+    function getAudioElem() {
+        return audioElem;
+    }
+    AudioPlayer.getAudioElem = getAudioElem;
+    function play() {
+        audioElem.play();
+    }
+    AudioPlayer.play = play;
+    function pause() {
+        audioElem.pause();
+    }
+    AudioPlayer.pause = pause;
+    function togglePlaying() {
+        if (audioElem.paused)
+            play();
+        else
+            pause();
+    }
+    AudioPlayer.togglePlaying = togglePlaying;
+})(AudioPlayer || (AudioPlayer = {}));
 //# sourceMappingURL=global.js.map
