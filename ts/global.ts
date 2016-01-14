@@ -131,6 +131,7 @@ function mountFileContent(jObject: JQuery) {
                         mediaMount.children().remove();
                         mediaMount.append(res);
                         AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
+                        AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
                     }
                 }
             );
@@ -282,22 +283,104 @@ class Color {
 
 module AudioPlayer {
 
+    class Controls {
+        htmlElem: HTMLDivElement;
+        container: JQuery;
+        play: JQuery;
+        timeline: JQuery;
+        playHead: JQuery;
+        volume: JQuery;
+        volumeControl: JQuery;
+        volumeToggle: JQuery;
+        volumeHead: JQuery;
+
+        loadedData: boolean = false;
+
+        mouseDown: boolean = false;
+
+        constructor(htmlElem: HTMLDivElement) {
+            this.container = $(htmlElem);
+            this.htmlElem = htmlElem;
+            this.play = this.container.find('.play');
+            this.timeline = this.container.find('.timeline');
+            this.playHead = this.container.find('.playHead');
+            this.volume = this.container.find('.volume');
+            this.volumeControl = this.container.find('.volumeControl');
+            this.volumeToggle = this.container.find('.volumeToggle');
+            this.volumeHead = this.container.find('.volumeHead');
+
+            this.timeline.mousedown(function(event: JQueryMouseEventObject) {
+                this.mouseDown = true;
+                updateTimeFromTimeline(event);
+            });
+            this.timeline.mousemove(function(event: JQueryMouseEventObject) {
+                if (this.mouseDown)
+                    updateTimeFromTimeline(event);
+            });
+            this.timeline.mouseup(function() { this.mouseDown = false;});
+            this.volumeControl.mouseleave(function() {this.mouseDown = false;});
+
+            this.volumeControl.mousedown(function(event: JQueryMouseEventObject) {
+                this.mouseDown = true;
+                changeVolumeFromControls(event);
+            });
+            this.volumeControl.mousemove(function(event: JQueryMouseEventObject) {
+                if (this.mouseDown)
+                    changeVolumeFromControls(event);
+            });
+            this.volumeControl.mouseup(function () {this.mouseDown = false;});
+            this.volumeControl.mouseleave(function() {this.mouseDown = false;});
+        }
+    }
+
     let audioElem: HTMLAudioElement;
+    let controls: Controls;
+    let timeUpdateFunction: () => void = function() {
+        controls.playHead.width((audioElem.currentTime / audioElem.duration * 100) + "%");
+    };
+    let volumeUpdateFunction: () => void = function() {
+        controls.volumeHead.css('height', audioElem.volume * 100 + "%");
+    };
+    //let onLoad: () => void = function() {
+    //
+    //};
 
     export function setAudioElem(newElem: HTMLAudioElement) {
         audioElem = newElem;
+        audioElem.addEventListener('timeupdate', timeUpdateFunction);
+        audioElem.addEventListener('volumechange', volumeUpdateFunction);
+        audioElem.addEventListener('loadeddata', function() {
+            controls.loadedData = true;
+        })
     }
 
     export function getAudioElem(): HTMLAudioElement {
         return audioElem;
     }
 
+    export function setControlsElem(newControlsElem: HTMLDivElement) {
+        controls = new Controls(newControlsElem);
+        controls.loadedData = false;
+        controls.volumeToggle.click(toggleMute);
+        volumeUpdateFunction();
+    }
+
+    export function getControlsElem(): Controls {
+        return controls;
+    }
+
     export function play() {
-        audioElem.play();
+        if (controls.loadedData) {
+            audioElem.play();
+            controls.play.find('i').toggleClass('fa-play').toggleClass('fa-pause');
+        }
     }
 
     export function pause() {
-        audioElem.pause();
+        if (controls.loadedData) {
+            audioElem.pause();
+            controls.play.find('i').toggleClass('fa-play').toggleClass('fa-pause');
+        }
     }
 
     export function togglePlaying() {
@@ -306,4 +389,34 @@ module AudioPlayer {
         else
             pause();
     }
+
+    export function mute() {
+        audioElem.muted = true;
+        controls.volumeToggle.find('i').toggleClass('fa-volume-up').toggleClass('fa-volume-off');
+    }
+
+    export function unMute() {
+        audioElem.muted = false;
+        controls.volumeToggle.find('i').toggleClass('fa-volume-up').toggleClass('fa-volume-off');
+    }
+
+    export function toggleMute() {
+        if (audioElem.muted)
+            unMute();
+        else
+            mute();
+    }
+
+    export function updateTimeFromTimeline(event: JQueryMouseEventObject) {
+        let percent: number = Math.max(Math.min((event.pageX - controls.timeline.offset().left) / controls.timeline.width(), 1.0), 0.0);
+        audioElem.currentTime = audioElem.duration * percent;
+        controls.playHead.css('width', percent * 100 + "%");
+    }
+
+    export function changeVolumeFromControls(event: JQueryMouseEventObject) {
+        let percent: number = Math.max(Math.min(1 - (event.pageY - controls.volumeControl.offset().top) / controls.volumeControl.height(), 1.0), 0.0);
+        audioElem.volume = percent;
+    }
+
+
 }

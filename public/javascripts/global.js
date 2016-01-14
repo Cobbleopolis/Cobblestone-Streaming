@@ -112,6 +112,7 @@ function mountFileContent(jObject) {
                 mediaMount.children().remove();
                 mediaMount.append(res);
                 AudioPlayer.setAudioElem($('audio')[0]);
+                AudioPlayer.setControlsElem($('.controls')[0]);
             }
         });
     }
@@ -246,21 +247,89 @@ var Color = (function () {
 })();
 var AudioPlayer;
 (function (AudioPlayer) {
+    var Controls = (function () {
+        function Controls(htmlElem) {
+            this.loadedData = false;
+            this.mouseDown = false;
+            this.container = $(htmlElem);
+            this.htmlElem = htmlElem;
+            this.play = this.container.find('.play');
+            this.timeline = this.container.find('.timeline');
+            this.playHead = this.container.find('.playHead');
+            this.volume = this.container.find('.volume');
+            this.volumeControl = this.container.find('.volumeControl');
+            this.volumeToggle = this.container.find('.volumeToggle');
+            this.volumeHead = this.container.find('.volumeHead');
+            this.timeline.mousedown(function (event) {
+                this.mouseDown = true;
+                updateTimeFromTimeline(event);
+            });
+            this.timeline.mousemove(function (event) {
+                if (this.mouseDown)
+                    updateTimeFromTimeline(event);
+            });
+            this.timeline.mouseup(function () { this.mouseDown = false; });
+            this.volumeControl.mouseleave(function () { this.mouseDown = false; });
+            this.volumeControl.mousedown(function (event) {
+                this.mouseDown = true;
+                changeVolumeFromControls(event);
+            });
+            this.volumeControl.mousemove(function (event) {
+                if (this.mouseDown)
+                    changeVolumeFromControls(event);
+            });
+            this.volumeControl.mouseup(function () { this.mouseDown = false; });
+            this.volumeControl.mouseleave(function () { this.mouseDown = false; });
+        }
+        return Controls;
+    })();
     var audioElem;
+    var controls;
+    var timeUpdateFunction = function () {
+        controls.playHead.width((audioElem.currentTime / audioElem.duration * 100) + "%");
+    };
+    var volumeUpdateFunction = function () {
+        controls.volumeHead.css('height', audioElem.volume * 100 + "%");
+    };
+    //let onLoad: () => void = function() {
+    //
+    //};
     function setAudioElem(newElem) {
         audioElem = newElem;
+        audioElem.addEventListener('timeupdate', timeUpdateFunction);
+        audioElem.addEventListener('volumechange', volumeUpdateFunction);
+        audioElem.addEventListener('loadeddata', function () {
+            controls.loadedData = true;
+        });
     }
     AudioPlayer.setAudioElem = setAudioElem;
     function getAudioElem() {
         return audioElem;
     }
     AudioPlayer.getAudioElem = getAudioElem;
+    function setControlsElem(newControlsElem) {
+        controls = new Controls(newControlsElem);
+        controls.loadedData = false;
+        controls.volumeToggle.click(toggleMute);
+        volumeUpdateFunction();
+    }
+    AudioPlayer.setControlsElem = setControlsElem;
+    function getControlsElem() {
+        return controls;
+    }
+    AudioPlayer.getControlsElem = getControlsElem;
     function play() {
-        audioElem.play();
+        if (controls.loadedData) {
+            audioElem.play();
+            controls.play.find('i').toggleClass('fa-play').toggleClass('fa-pause');
+        }
     }
     AudioPlayer.play = play;
     function pause() {
-        audioElem.pause();
+        if (controls.loadedData) {
+            audioElem.pause();
+            controls.play.find('i').toggleClass('fa-play').toggleClass('fa-pause');
+        }
     }
     AudioPlayer.pause = pause;
     function togglePlaying() {
@@ -270,5 +339,33 @@ var AudioPlayer;
             pause();
     }
     AudioPlayer.togglePlaying = togglePlaying;
+    function mute() {
+        audioElem.muted = true;
+        controls.volumeToggle.find('i').toggleClass('fa-volume-up').toggleClass('fa-volume-off');
+    }
+    AudioPlayer.mute = mute;
+    function unMute() {
+        audioElem.muted = false;
+        controls.volumeToggle.find('i').toggleClass('fa-volume-up').toggleClass('fa-volume-off');
+    }
+    AudioPlayer.unMute = unMute;
+    function toggleMute() {
+        if (audioElem.muted)
+            unMute();
+        else
+            mute();
+    }
+    AudioPlayer.toggleMute = toggleMute;
+    function updateTimeFromTimeline(event) {
+        var percent = Math.max(Math.min((event.pageX - controls.timeline.offset().left) / controls.timeline.width(), 1.0), 0.0);
+        audioElem.currentTime = audioElem.duration * percent;
+        controls.playHead.css('width', percent * 100 + "%");
+    }
+    AudioPlayer.updateTimeFromTimeline = updateTimeFromTimeline;
+    function changeVolumeFromControls(event) {
+        var percent = Math.max(Math.min(1 - (event.pageY - controls.volumeControl.offset().top) / controls.volumeControl.height(), 1.0), 0.0);
+        audioElem.volume = percent;
+    }
+    AudioPlayer.changeVolumeFromControls = changeVolumeFromControls;
 })(AudioPlayer || (AudioPlayer = {}));
 //# sourceMappingURL=global.js.map

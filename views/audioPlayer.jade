@@ -2,5 +2,13 @@ div.musicPlayer
     img(src= dir + '/cover.jpg' onload= 'this.style.opacity = "1"')
     div.controls
         div.play(onclick='AudioPlayer.togglePlaying()')
-    audio(controls = 'controls')
+            i.fa.fa-play
+        div.timeline
+            div.playHead
+        div.volume
+            div.volumeToggle
+                i.fa.fa-volume-up
+            div.volumeControl
+                div.volumeHead
+    audio(controls = 'controlsElem')
         source(src= file.path type= file.type)

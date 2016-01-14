@@ -167,10 +167,51 @@ div.musicPlayer {
     position: absolute;
     margin: 0 auto;
     bottom: 0; }
-    div.musicPlayer div.controls div.play {
-      background-color: blue;
+    div.musicPlayer div.controls div {
+      height: 2.5rem;
+      font-size: 1rem;
+      background-color: #2e2e2e; }
+    div.musicPlayer div.controls .play {
       width: 2.5rem;
-      height: 2.5rem; }
+      float: left;
+      cursor: pointer; }
+      div.musicPlayer div.controls .play i {
+        padding: 0.75rem;
+        color: #ededed; }
+    div.musicPlayer div.controls .timeline {
+      width: 35rem;
+      margin: 0 2.5rem;
+      cursor: pointer; }
+      div.musicPlayer div.controls .timeline .playHead {
+        background: #616161;
+        width: 0;
+        cursor: pointer; }
+    div.musicPlayer div.controls .volume {
+      width: 2.5rem;
+      float: right;
+      margin-top: -2.5rem;
+      cursor: pointer; }
+      div.musicPlayer div.controls .volume .volumeToggle i {
+        padding: 0.75rem;
+        color: #ededed; }
+      div.musicPlayer div.controls .volume .volumeControl {
+        margin-top: -7.5rem;
+        opacity: 0;
+        height: 5rem;
+        position: relative;
+        -webkit-transition: opacity 0.25s;
+        -moz-transition: opacity 0.25s;
+        -ms-transition: opacity 0.25s;
+        -o-transition: opacity 0.25s;
+        transition: opacity 0.25s; }
+        div.musicPlayer div.controls .volume .volumeControl .volumeHead {
+          background-color: #616161;
+          height: 0;
+          position: absolute;
+          bottom: 0;
+          width: 100%; }
+      div.musicPlayer div.controls .volume:hover .volumeControl {
+        opacity: 1; }
   div.musicPlayer audio {
     display: none; }
 
