@@ -104,9 +104,9 @@ function mountFileContent(jObject) {
         mediaMount.children().remove();
         mediaMount.append($(document.createElement('img')).attr('src', path));
     }
-    else if (FileExtention.isAudioExtension(extension)) {
+    else if (FileExtention.isAudioExtension(extension))
         $.ajax({
-            url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir,
+            url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir + '&type=' + FileExtention.getFileMediaType(extension),
             type: 'get',
             success: function (res) {
                 mediaMount.children().remove();
@@ -115,7 +115,30 @@ function mountFileContent(jObject) {
                 AudioPlayer.setControlsElem($('.controls')[0]);
             }
         });
-    }
+    else if (FileExtention.isVideoExtension(extension))
+        $.ajax({
+            url: '/rest/getVideoPlayer?file=' + path + '&type=' + FileExtention.getFileMediaType(extension),
+            type: 'get',
+            success: function (res) {
+                mediaMount.children().remove();
+                mediaMount.append(res);
+                console.log(res);
+                //AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
+                //AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
+            }
+        });
+    //$.ajax(
+    //    {
+    //        url: '/rest/getAlbumImage?dir=' + dir,
+    //        type: 'get',
+    //        success: function(res) {
+    //            $('div.musicPlayer img').fadeOut('fast', function() {
+    //
+    //            });
+    //            console.log(res);
+    //        }
+    //    }
+    //}
     if (autoClose)
         toggleNav();
 }
@@ -185,6 +208,10 @@ var FileExtention;
             'mp3': 'audio/mpeg',
             'flac': 'audio/mpeg',
             'oog': 'audio/oog'
+        },
+        videoTypes: {
+            'mp4': 'video/mp4',
+            'webm': 'video/webm'
         }
     };
     function getFileExtention(filename) {
@@ -199,11 +226,17 @@ var FileExtention;
         return fileExtension in fileTypes.audioTypes;
     }
     FileExtention.isAudioExtension = isAudioExtension;
+    function isVideoExtension(fileExtension) {
+        return fileExtension in fileTypes.videoTypes;
+    }
+    FileExtention.isVideoExtension = isVideoExtension;
     function getFileMediaType(fileExtension) {
         if (isImageExtension(fileExtension))
             return fileTypes.imageTypes[fileExtension];
         else if (isAudioExtension(fileExtension))
             return fileTypes.audioTypes[fileExtension];
+        else if (isVideoExtension(fileExtension))
+            return fileTypes.videoTypes[fileExtension];
         else
             return null;
     }
@@ -213,7 +246,9 @@ var Color = (function () {
     function Color(value) {
         this.color = value;
     }
-    Color.prototype.toString = function () { return this.color; };
+    Color.prototype.toString = function () {
+        return this.color;
+    };
     Color.prototype.getDisplayString = function () {
         return this.color.substring(0, 1).toUpperCase() + this.color.substring(1);
     };
@@ -268,8 +303,12 @@ var AudioPlayer;
                 if (this.mouseDown)
                     updateTimeFromTimeline(event);
             });
-            this.timeline.mouseup(function () { this.mouseDown = false; });
-            this.volumeControl.mouseleave(function () { this.mouseDown = false; });
+            this.timeline.mouseup(function () {
+                this.mouseDown = false;
+            });
+            this.volumeControl.mouseleave(function () {
+                this.mouseDown = false;
+            });
             this.volumeControl.mousedown(function (event) {
                 this.mouseDown = true;
                 changeVolumeFromControls(event);
@@ -278,8 +317,12 @@ var AudioPlayer;
                 if (this.mouseDown)
                     changeVolumeFromControls(event);
             });
-            this.volumeControl.mouseup(function () { this.mouseDown = false; });
-            this.volumeControl.mouseleave(function () { this.mouseDown = false; });
+            this.volumeControl.mouseup(function () {
+                this.mouseDown = false;
+            });
+            this.volumeControl.mouseleave(function () {
+                this.mouseDown = false;
+            });
         }
         return Controls;
     })();

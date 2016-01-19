@@ -1,16 +1,16 @@
 var isNavShown = false;
-var nav: JQuery;
-var content: JQuery;
-var overlay: JQuery;
-var navButton: JQuery;
-var navLabel: JQuery = $( '<span id=\'navLabel\'>&nbsp;&nbsp;&nbsp;Navigation</span>' );
+var nav:JQuery;
+var content:JQuery;
+var overlay:JQuery;
+var navButton:JQuery;
+var navLabel:JQuery = $('<span id=\'navLabel\'>&nbsp;&nbsp;&nbsp;Navigation</span>');
 navLabel.fadeOut();
 var mediaMount = null;
 var autoClose = true;
 
-var navSlideTime: number = 350;
+var navSlideTime:number = 350;
 
-$(document).ready( function() {
+$(document).ready(function () {
     content = $('#content');
     overlay = $('#overlay');
     nav = $('#nav');
@@ -43,8 +43,8 @@ $(document).ready( function() {
     $('.folder').click(function () {
         var jThis = $(this);
         var i = jThis.find($('i'));
-        var isClosing: boolean;
-        var moveWidth: number = nav.outerWidth(true);
+        var isClosing:boolean;
+        var moveWidth:number = nav.outerWidth(true);
 
         if (i.hasClass('fa-folder')) {
             i.removeClass('fa-folder');
@@ -61,7 +61,7 @@ $(document).ready( function() {
         var child = $(jThis.siblings()[0]);
         child.stop().animate({height: 'toggle'},
             {
-                start: function() {
+                start: function () {
                     if (isClosing)
                         child.css('position', 'absolute');
                     content.animate({'left': nav.outerWidth(true)}, 350);
@@ -74,7 +74,7 @@ $(document).ready( function() {
         );
     });
 
-    $('.file').click(function() {
+    $('.file').click(function () {
         var jThis = $(this);
         console.log(jThis.html());
         mountFileContent(jThis);
@@ -98,7 +98,7 @@ function closeNav() {
         navButton.stop().animate({'left': '0'}, navSlideTime);
         overlay.stop().animate({'left': '0', 'opacity': '0'}, {
             duration: navSlideTime,
-            done: function() {
+            done: function () {
                 overlay.css('display', 'none');
             }
         });
@@ -114,7 +114,7 @@ function toggleNav() {
     content.toggleClass('darken');
 }
 
-function mountFileContent(jObject: JQuery) {
+function mountFileContent(jObject:JQuery) {
     var fileName:string = jObject.find($('span')).text();
     var path:string = jObject.attr('path');
     var dir:string = path.substring(0, path.lastIndexOf("/"));
@@ -123,31 +123,43 @@ function mountFileContent(jObject: JQuery) {
     if (FileExtention.isImageExtension(extension)) {
         mediaMount.children().remove();
         mediaMount.append($(document.createElement('img')).attr('src', path));
-    } else if (FileExtention.isAudioExtension(extension)) {
-            $.ajax({
-                    url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir,
-                    type: 'get',
-                    success: function(res) {
-                        mediaMount.children().remove();
-                        mediaMount.append(res);
-                        AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
-                        AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
-                    }
+    } else if (FileExtention.isAudioExtension(extension))
+        $.ajax({
+                url: '/rest/getAudioPlayer?file=' + path + '&dir=' + dir + '&type=' + FileExtention.getFileMediaType(extension),
+                type: 'get',
+                success: function (res) {
+                    mediaMount.children().remove();
+                    mediaMount.append(res);
+                    AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
+                    AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
                 }
-            );
-            //$.ajax(
-            //    {
-            //        url: '/rest/getAlbumImage?dir=' + dir,
-            //        type: 'get',
-            //        success: function(res) {
-            //            $('div.musicPlayer img').fadeOut('fast', function() {
-            //
-            //            });
-            //            console.log(res);
-            //        }
-            //    }
-            //)
-    }
+            }
+        );
+    else if (FileExtention.isVideoExtension(extension))
+        $.ajax({
+                url: '/rest/getVideoPlayer?file=' + path + '&type=' + FileExtention.getFileMediaType(extension),
+                type: 'get',
+                success: function (res) {
+                    mediaMount.children().remove();
+                    mediaMount.append(res);
+                    console.log(res);
+                    //AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
+                    //AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
+                }
+            }
+        );
+        //$.ajax(
+        //    {
+        //        url: '/rest/getAlbumImage?dir=' + dir,
+        //        type: 'get',
+        //        success: function(res) {
+        //            $('div.musicPlayer img').fadeOut('fast', function() {
+        //
+        //            });
+        //            console.log(res);
+        //        }
+        //    }
+        //}
     if (autoClose)
         toggleNav();
 }
@@ -155,13 +167,13 @@ function mountFileContent(jObject: JQuery) {
 module MessageHandle {
 
     export module MessageType {
-        export const NEUTRAL: string = 'neutral';
-        export const INFO: string = 'info';
-        export const POSITIVE: string = 'positive';
-        export const NEGATIVE: string = 'negative';
+        export const NEUTRAL:string = 'neutral';
+        export const INFO:string = 'info';
+        export const POSITIVE:string = 'positive';
+        export const NEGATIVE:string = 'negative';
     }
 
-    export function messageBefore(mount: JQuery, errorMsg: string, messageType: string, callback?: (error?: JQuery, mount?: JQuery) => void): JQuery {
+    export function messageBefore(mount:JQuery, errorMsg:string, messageType:string, callback?:(error?:JQuery, mount?:JQuery) => void):JQuery {
         var msg = $(document.createElement('p'));
         msg.addClass('message ' + messageType);
         msg.text(errorMsg);
@@ -170,7 +182,7 @@ module MessageHandle {
         return msg;
     }
 
-    export function messageAfter(mount: JQuery, errorMsg: string, messageType: string, callback?: (error?: JQuery, mount?: JQuery) => void): JQuery {
+    export function messageAfter(mount:JQuery, errorMsg:string, messageType:string, callback?:(error?:JQuery, mount?:JQuery) => void):JQuery {
         var msg = $(document.createElement('p'));
         msg.addClass('message ' + messageType);
         msg.text(errorMsg);
@@ -179,31 +191,31 @@ module MessageHandle {
         return msg;
     }
 
-    export function messageBeforeWithBreak(mount: JQuery, errorMsg: string, messageType: string, callback?: (error?: JQuery, mount?: JQuery) => void): JQuery {
+    export function messageBeforeWithBreak(mount:JQuery, errorMsg:string, messageType:string, callback?:(error?:JQuery, mount?:JQuery) => void):JQuery {
         var message = MessageHandle.messageBefore(mount, errorMsg, messageType, callback);
         $(document.createElement('hr')).insertAfter(message);
         return message;
     }
 
-    export function messageAfterWithBreak(mount: JQuery, errorMsg: string, messageType: string, callback?: (error?: JQuery, mount?: JQuery) => void): JQuery {
+    export function messageAfterWithBreak(mount:JQuery, errorMsg:string, messageType:string, callback?:(error?:JQuery, mount?:JQuery) => void):JQuery {
         var message = MessageHandle.messageAfter(mount, errorMsg, messageType, callback);
         $(document.createElement('hr')).insertBefore(message);
         return message;
     }
 
-    export function messageError(message: JQuery, callback?: () => void) {
+    export function messageError(message:JQuery, callback?:() => void) {
         message.remove();
         if (callback) callback();
     }
 
-    export function removeAllMessages(callback?: () => void) {
+    export function removeAllMessages(callback?:() => void) {
         $('p.message').remove();
         if (callback) callback();
     }
 }
 
 module FileExtention {
-    let fileTypes: any = {
+    let fileTypes:any = {
         imageTypes: {
             'jpg': '',
             'jpeg': '',
@@ -213,26 +225,36 @@ module FileExtention {
             'mp3': 'audio/mpeg',
             'flac': 'audio/mpeg', //TODO check for correct type
             'oog': 'audio/oog'
+        },
+        videoTypes: {
+            'mp4': 'video/mp4',
+            'webm': 'video/webm'
         }
     };
 
-    export function getFileExtention(filename: string): string {
+    export function getFileExtention(filename:string):string {
         return filename.split('.').pop().toLowerCase();
     }
 
-    export function isImageExtension(fileExtension: string): boolean {
+    export function isImageExtension(fileExtension:string):boolean {
         return fileExtension in fileTypes.imageTypes;
     }
 
-    export function isAudioExtension(fileExtension: string): boolean {
+    export function isAudioExtension(fileExtension:string):boolean {
         return fileExtension in fileTypes.audioTypes;
     }
 
-    export function getFileMediaType(fileExtension: string): string {
+    export function isVideoExtension(fileExtension:string):boolean {
+        return fileExtension in fileTypes.videoTypes;
+    }
+
+    export function getFileMediaType(fileExtension:string):string {
         if (isImageExtension(fileExtension))
             return fileTypes.imageTypes[fileExtension];
         else if (isAudioExtension(fileExtension))
             return fileTypes.audioTypes[fileExtension];
+        else if (isVideoExtension(fileExtension))
+            return fileTypes.videoTypes[fileExtension];
         else
             return null;
     }
@@ -241,30 +263,34 @@ module FileExtention {
 
 class Color {
 
-    color: string;
+    color:string;
 
-    constructor (value: string) {this.color = value}
+    constructor(value:string) {
+        this.color = value
+    }
 
-    toString(): string {return this.color}
+    toString():string {
+        return this.color
+    }
 
-    getDisplayString(): string {
+    getDisplayString():string {
         return this.color.substring(0, 1).toUpperCase() + this.color.substring(1);
     }
 
-    static red: Color = new Color('red');
-    static orange: Color = new Color('orange');
-    static yellow: Color = new Color('yellow');
-    static olive: Color = new Color('olive');
-    static green: Color = new Color('green');
-    static teal: Color = new Color('teal');
-    static blue: Color = new Color('blue');
-    static violet: Color = new Color('violet');
-    static pink: Color = new Color('pink');
-    static brown: Color = new Color('brown');
-    static grey: Color = new Color('grey');
-    static black: Color = new Color('black');
+    static red:Color = new Color('red');
+    static orange:Color = new Color('orange');
+    static yellow:Color = new Color('yellow');
+    static olive:Color = new Color('olive');
+    static green:Color = new Color('green');
+    static teal:Color = new Color('teal');
+    static blue:Color = new Color('blue');
+    static violet:Color = new Color('violet');
+    static pink:Color = new Color('pink');
+    static brown:Color = new Color('brown');
+    static grey:Color = new Color('grey');
+    static black:Color = new Color('black');
 
-    static allColors: Color[] = [
+    static allColors:Color[] = [
         Color.red,
         Color.orange,
         Color.yellow,
@@ -284,21 +310,21 @@ class Color {
 module AudioPlayer {
 
     class Controls {
-        htmlElem: HTMLDivElement;
-        container: JQuery;
-        play: JQuery;
-        timeline: JQuery;
-        playHead: JQuery;
-        volume: JQuery;
-        volumeControl: JQuery;
-        volumeToggle: JQuery;
-        volumeHead: JQuery;
+        htmlElem:HTMLDivElement;
+        container:JQuery;
+        play:JQuery;
+        timeline:JQuery;
+        playHead:JQuery;
+        volume:JQuery;
+        volumeControl:JQuery;
+        volumeToggle:JQuery;
+        volumeHead:JQuery;
 
-        loadedData: boolean = false;
+        loadedData:boolean = false;
 
-        mouseDown: boolean = false;
+        mouseDown:boolean = false;
 
-        constructor(htmlElem: HTMLDivElement) {
+        constructor(htmlElem:HTMLDivElement) {
             this.container = $(htmlElem);
             this.htmlElem = htmlElem;
             this.play = this.container.find('.play');
@@ -309,63 +335,71 @@ module AudioPlayer {
             this.volumeToggle = this.container.find('.volumeToggle');
             this.volumeHead = this.container.find('.volumeHead');
 
-            this.timeline.mousedown(function(event: JQueryMouseEventObject) {
+            this.timeline.mousedown(function (event:JQueryMouseEventObject) {
                 this.mouseDown = true;
                 updateTimeFromTimeline(event);
             });
-            this.timeline.mousemove(function(event: JQueryMouseEventObject) {
+            this.timeline.mousemove(function (event:JQueryMouseEventObject) {
                 if (this.mouseDown)
                     updateTimeFromTimeline(event);
             });
-            this.timeline.mouseup(function() { this.mouseDown = false;});
-            this.volumeControl.mouseleave(function() {this.mouseDown = false;});
+            this.timeline.mouseup(function () {
+                this.mouseDown = false;
+            });
+            this.volumeControl.mouseleave(function () {
+                this.mouseDown = false;
+            });
 
-            this.volumeControl.mousedown(function(event: JQueryMouseEventObject) {
+            this.volumeControl.mousedown(function (event:JQueryMouseEventObject) {
                 this.mouseDown = true;
                 changeVolumeFromControls(event);
             });
-            this.volumeControl.mousemove(function(event: JQueryMouseEventObject) {
+            this.volumeControl.mousemove(function (event:JQueryMouseEventObject) {
                 if (this.mouseDown)
                     changeVolumeFromControls(event);
             });
-            this.volumeControl.mouseup(function () {this.mouseDown = false;});
-            this.volumeControl.mouseleave(function() {this.mouseDown = false;});
+            this.volumeControl.mouseup(function () {
+                this.mouseDown = false;
+            });
+            this.volumeControl.mouseleave(function () {
+                this.mouseDown = false;
+            });
         }
     }
 
-    let audioElem: HTMLAudioElement;
-    let controls: Controls;
-    let timeUpdateFunction: () => void = function() {
+    let audioElem:HTMLAudioElement;
+    let controls:Controls;
+    let timeUpdateFunction:() => void = function () {
         controls.playHead.width((audioElem.currentTime / audioElem.duration * 100) + "%");
     };
-    let volumeUpdateFunction: () => void = function() {
+    let volumeUpdateFunction:() => void = function () {
         controls.volumeHead.css('height', audioElem.volume * 100 + "%");
     };
     //let onLoad: () => void = function() {
     //
     //};
 
-    export function setAudioElem(newElem: HTMLAudioElement) {
+    export function setAudioElem(newElem:HTMLAudioElement) {
         audioElem = newElem;
         audioElem.addEventListener('timeupdate', timeUpdateFunction);
         audioElem.addEventListener('volumechange', volumeUpdateFunction);
-        audioElem.addEventListener('loadeddata', function() {
+        audioElem.addEventListener('loadeddata', function () {
             controls.loadedData = true;
         })
     }
 
-    export function getAudioElem(): HTMLAudioElement {
+    export function getAudioElem():HTMLAudioElement {
         return audioElem;
     }
 
-    export function setControlsElem(newControlsElem: HTMLDivElement) {
+    export function setControlsElem(newControlsElem:HTMLDivElement) {
         controls = new Controls(newControlsElem);
         controls.loadedData = false;
         controls.volumeToggle.click(toggleMute);
         volumeUpdateFunction();
     }
 
-    export function getControlsElem(): Controls {
+    export function getControlsElem():Controls {
         return controls;
     }
 
@@ -384,7 +418,7 @@ module AudioPlayer {
     }
 
     export function togglePlaying() {
-        if(audioElem.paused)
+        if (audioElem.paused)
             play();
         else
             pause();
@@ -407,16 +441,16 @@ module AudioPlayer {
             mute();
     }
 
-    export function updateTimeFromTimeline(event: JQueryMouseEventObject) {
-        let percent: number = Math.max(Math.min((event.pageX - controls.timeline.offset().left) / controls.timeline.width(), 1.0), 0.0);
+    export function updateTimeFromTimeline(event:JQueryMouseEventObject) {
+        let percent:number = Math.max(Math.min((event.pageX - controls.timeline.offset().left) / controls.timeline.width(), 1.0), 0.0);
         audioElem.currentTime = audioElem.duration * percent;
         controls.playHead.css('width', percent * 100 + "%");
     }
 
-    export function changeVolumeFromControls(event: JQueryMouseEventObject) {
-        let percent: number = Math.max(Math.min(1 - (event.pageY - controls.volumeControl.offset().top) / controls.volumeControl.height(), 1.0), 0.0);
+    export function changeVolumeFromControls(event:JQueryMouseEventObject) {
+        let percent:number = Math.max(Math.min(1 - (event.pageY - controls.volumeControl.offset().top) / controls.volumeControl.height(), 1.0), 0.0);
         audioElem.volume = percent;
     }
 
-
 }
+

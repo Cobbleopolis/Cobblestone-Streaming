@@ -46,7 +46,12 @@ router.get('/getAlbumImage', function (req, res, next) {
 });
 
 router.get('/getAudioPlayer', function (req, res, next) {
-   res.render('audioPlayer', {dir: req.query.dir, file: { path: req.query.file, type: 'audio/mpeg'}});
+   res.render('audioPlayer', {dir: req.query.dir, file: { path: req.query.file, type: req.query.type}});
+});
+
+router.get('/getVideoPlayer', function (req, res, next) {
+    console.log(JSON.stringify(req.query));
+    res.render('videoPlayer', {file: { path: req.query.file, type: req.query.type}});
 });
 
 module.exports = router;
