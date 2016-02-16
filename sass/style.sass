@@ -214,8 +214,8 @@ a
         max-height: 100%
         display: block
         margin: 0 auto
-        background-image: url("/public/images/loading.gif")
-        background-position: center
+        //noinspection CssUnknownTarget
+        background: url("/public/images/loading.gif") center
 
 .message
     margin:
@@ -256,6 +256,7 @@ div.musicPlayer
     width: 40rem
     margin: 0 auto
     height: 40rem
+    //noinspection CssUnknownTarget
     background-image: url('/public/images/album-art-missing.png')
     background-size: cover
     img.albumArt

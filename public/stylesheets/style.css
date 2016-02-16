@@ -111,8 +111,7 @@ a {
     max-height: 100%;
     display: block;
     margin: 0 auto;
-    background-image: url("/public/images/loading.gif");
-    background-position: center; }
+    background: url("/public/images/loading.gif") center; }
 
 .message {
   margin-top: 0.25rem;
