@@ -143,7 +143,6 @@ function mountFileContent(jObject:JQuery) {
                     mediaMount.children().remove();
                     mediaMount.append(res);
                     console.log(res);
-                    $(".videoPlayer").children().attr("width", content.innerWidth() - 500); //TODO make better
                     //AudioPlayer.setAudioElem((<HTMLAudioElement>$('audio')[0]));
                     //AudioPlayer.setControlsElem((<HTMLDivElement>$('.controls')[0]));
                 }
